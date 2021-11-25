@@ -1,0 +1,68 @@
+<h1><%= title %></h1>
+
+
+
+<div class="createNewCatWrap">
+  <div id="createNewCat">
+      <span id="catName"> Create new category </span>
+      <button id="catBtn" type="button" name="button">Create</button>
+  </div>
+</div>
+
+<div id="catWrap" class="container">
+  <% for (var i = 0; i < company.butlerbird.content.categorys.length;  i++ ) { %>
+
+
+    <div id='<%= company.butlerbird.content.categorys[i].category.catid %>' class="category draggable" draggable="true">
+      <span><%= company.butlerbird.content.categorys[i].category.name %> </span>
+
+
+
+      <div class="createbox">
+        <input id="boxname" type="text" name="" value="">
+        <button id="boxnamebtn" type="button" name="button">+</button>
+      </div>
+
+
+
+      <% for (var o = 0; o < company.butlerbird.content.categorys[i].category.content.length;  o++ ) { %>
+        <div id="<%= company.butlerbird.content.categorys[i].category.content[o]._id%>" class="box">
+          <h2><%= company.butlerbird.content.categorys[i].category.content[o].name%></h2>
+          <div class="settings">
+            <div>
+              <h3>Preview</h3>
+              <span>Text</span>
+              <textarea name="name" rows="2" cols="80"></textarea>
+              <br>
+              <span>Image</span>
+              <input type="file" name="" value="">
+              <br>
+              <span>Call to action</span>
+              <input type="checkbox" name="ctacheck" onclick="displaycta(this)">
+              <div class="cta">
+                <span>Text</span>
+                <input class="text" type="text" name="" value="">
+                <br>
+                <span>Color</span>
+                <input type="color" name="" value="#ff0000">
+                <br>
+                <span>Special action</span>
+              </div>
+              <div>
+                <h3>Page contents</h3>
+              </div>
+            </div>
+
+
+          </div>
+        </div>
+
+      <% } %>
+
+    </div>
+
+  <% } %>
+</div>
+
+
+ <script src="./js/content.js"></script>

@@ -1,0 +1,104 @@
+.createNewCatWrap {
+  max-width: 40vw;
+}
+
+#createNewCat {
+  display: flex;
+  justify-content: space-between;
+  width: 100% - 20px;
+  padding: 20px 40px;
+  background-color: LightGray;
+}
+
+
+
+#saveNewCat {
+  display: none;
+}
+
+.category {
+  display: flex;
+  flex-direction: column;
+  margin: 10px;
+  padding: 20px;
+  width: 100% - 20px;
+  background-color: #DDDBDB;
+  border-radius: 10px;
+}
+
+.box {
+  display: flex;
+  flex-direction: column;
+  margin: 10px;
+  padding: 20px;
+  width: 100% - 20px;
+  background-color: white;
+  border-radius: 10px;
+}
+
+
+.box h2{
+
+}
+
+
+.box h3{
+  margin: 10px 5px 2px;
+}
+
+.box h4{
+  margin: 10px
+}
+
+.box span{
+  margin: 10px 10px;
+
+}
+
+.box input {
+  margin: 10px 0px;
+}
+
+.box textarea {
+  -webkit-box-shadow: inset 1px 1px 13px 1px rgba(103,103,103,0.4);
+  box-shadow: inset 1px 1px 13px 1px rgba(103,103,103,0.4);
+  border-radius: 5px;
+  padding: 10px
+}
+
+.box .text {
+  -webkit-box-shadow: inset 1px 1px 13px 1px rgba(103,103,103,0.4);
+  box-shadow: inset 1px 1px 13px 1px rgba(103,103,103,0.4);
+  border-radius: 5px;
+  padding: 10px
+}
+
+
+.box .cta  {
+  display: none
+}
+
+
+.box .cta span {
+  margin: 10px 20px;
+}
+
+
+
+
+
+
+
+.draggable {
+  cursor: move;
+}
+
+.draggable.dragging {
+  opacity: .5;
+}
+
+
+.settings {
+
+  cursor: default;
+}

@@ -1,0 +1,10 @@
+<% if(messages.error){%>
+  <%= messages.error %>
+<% } %>
+<form class="" action="/login" method="post">
+  <div>
+      <input type="email" name="email" value="" placeholder="Email" required>
+      <input type="password" name="password" value="" placeholder="Password" required>
+  </div>
+  <input type="submit" name="" value="Login">
+</form>
