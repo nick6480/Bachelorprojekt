@@ -23,13 +23,15 @@ function createNewCat(e) {
   } else {
     spanSwitch(e)
   }
+
 }
+
 
 
 
 function spanSwitch(e) {
   let txt = e.innerText;
-  catName.innerHTML = `<input id="catNameValue" value='' />`;
+  catName.innerHTML = `<input id="catNameValue" type="text"value='' />`;
   catBtn.innerHTML = 'Save'
   document.getElementsByTagName('input')[0].focus();
 }
@@ -63,16 +65,17 @@ function createNewBox() {
   console.log(boxname.parentElement.parentElement);
 
   let data = {
-    id: boxname.parentElement.parentElement.id,
+    id: boxname.parentElement.parentElement.parentElement.id,
     value: boxname.value
   }
 
+  console.log(data);
   post(data, '/content/createbox')
 }
 
 
 // Box ------------------------------------------------------------------
-
+/*
 function displaycta(e) {
 
   console.log(e.parentElement);
@@ -88,58 +91,199 @@ function displaycta(e) {
         }
       }
   }
+}
+
+*/
 
 
+let arrows = document.querySelectorAll('.arrow')
+
+arrows.forEach(arrow => {
+
+
+  arrow.addEventListener('click', (e) => {
+    e.preventDefault()
+
+    console.log(e.target.parentElement.parentElement.parentElement);
+    console.log();
+
+    let form = e.target.parentElement.parentElement.parentElement.querySelector('.saveContent')
+
+    if (e.target.style.transform == 'rotate(180deg)') {
+      e.target.style.transform = 'rotate(0deg)'
+      form.style.display = 'none';
+    } else {
+      e.target.style.transform = 'rotate(180deg)'
+      form.style.display = 'block';
+    }
+
+
+  })
+})
+
+function hideBox() {
 
 }
+
+
+
+
+
+// Select---------------------------------------------------------------
+
+function action(e) {
+  let actions = document.getElementById("action");
+  if (actions !== null) {
+    let value = actions.value;
+    let text = actions.text;
+
+    switch (value) {
+      case 'link':
+        console.log('link');
+      break;
+      case 'copy':
+        console.log('copy');
+      break;
+      default:
+
+    }
+  }
+
+}
+
+action()
+
+// Save content ---------------------------------------------------------
+
+/*
+let saveContentBtn = document.querySelectorAll('.saveContent')
+
+saveContentBtn.forEach(btn => {
+
+  btn.addEventListener('click', (e) => {
+    console.log(e.target.parentElement);
+    saveContent(e.target.parentElement)
+  })
+})
+*/
+
+/*
+let saveContentForm = document.querySelectorAll('.saveContent')
+
+saveContentForm.forEach(form => {
+
+  e.preventDefault();
+
+  form.addEventListener('submit', (e) => {
+
+    console.log(form.parentElement.parentElement.parentElement.id);
+    let elements = form.querySelectorAll('input, textarea, select');
+    console.log(elements);
+
+
+    let values = {
+      boxId: form.parentElement.id,
+      catId: form.parentElement.parentElement.parentElement.id,
+      previewText: elements[0].value,
+      previewImg: elements[1].value,
+      action: elements[2].value,
+    }
+
+
+    //post(values, '/content/update/content')
+
+
+
+
+  })
+})
+*/
+
+
 
 
 
 //Drag and drop ---------------------------------------------------------
 
-function drag() {
-  const draggables = document.querySelectorAll('.draggable')
-  const containers = document.querySelectorAll('.container')
 
-  draggables.forEach(draggable => {
-    draggable.addEventListener('dragstart', () => {
-      draggable.classList.add('dragging')
-    })
 
-    draggable.addEventListener('dragend', () => {
-      draggable.classList.remove('dragging')
-      const catagoryNode = document.querySelectorAll('.draggable')
-      const categorys = Array.from(catagoryNode)
 
-      let catId = [];
 
-      categorys.forEach(category => {
-        catId.push(category.id)
+const draggables = document.querySelectorAll('.draggable')
 
+const containers = document.querySelectorAll('.container')
+
+
+draggables.forEach(draggable => {
+  draggable.addEventListener('dragstart', (e) => {
+    if (draggable.classList.contains('box')) {
+      e.stopPropagation()
+    }
+    draggable.classList.add('dragging')
+  })
+
+  draggable.addEventListener('dragend', (e) => {
+    if (draggable.classList.contains('box')) {
+      e.stopPropagation()
+    }
+    draggable.classList.remove('dragging')
+
+
+    const categorysNode = document.querySelectorAll('.catdraggable')
+    const category = Array.from(categorysNode)
+
+    let arr = []
+
+    category.forEach(category => {
+
+      let boxes = category.querySelectorAll('.box')
+
+      boxid = []
+
+      boxes.forEach(box => {
+        boxid.push(box.id)
       });
-      //console.log(catId);
-
-      post(catId, '/content/updatecatpos')
 
 
-    })
-  });
+
+      let obj = {
+        id: category.id,
+        boxes: boxid
+      }
+      arr.push(obj)
+
+    });
+
+    console.log(arr);
+    post(arr, '/content/updatecatpos')
+
+  })
+})
+
+containers.forEach(container => {
+  container.addEventListener('dragover', e => {
+    e.preventDefault()
+    if (container.classList.contains('boxcontainer')) {
+      e.stopPropagation()
+    }
+
+    const draggable = document.querySelector('.dragging')
+
+    if (container.classList[0].substring(0,3) == draggable.classList[0].substring(0,3)) {
 
 
-  containers.forEach(container => {
-    container.addEventListener('dragover', e => {
-      e.preventDefault()
       const afterElement = getDragAfterElement(container, e.clientY)
-      const draggable = document.querySelector('.dragging')
+
+
       if (afterElement == null) {
         container.appendChild(draggable)
       } else {
-        container.insertBefore(draggable, afterElement)
+        console.log(container.classList + " : " + "(" + draggable.classList + " : " + afterElement.classList);
+        //container.insertBefore(draggable, afterElement)
       }
-
-    })
-  });
-}
+    }
+  })
+})
 
 function getDragAfterElement(container, y) {
   const draggableElements = [...container.querySelectorAll('.draggable:not(.dragging)')]
@@ -148,20 +292,19 @@ function getDragAfterElement(container, y) {
     const box = child.getBoundingClientRect()
     const offset = y - box.top - box.height / 2
     if (offset < 0 && offset > closest.offset) {
-      return { offset : offset, element : child}
+      return { offset: offset, element: child }
     } else {
       return closest
     }
   }, { offset: Number.NEGATIVE_INFINITY }).element
 }
 
- drag()
 
 
 
 
 
-
+// FIX INSERT BEFORE AND BOX POS ROUTING
 
 
 

@@ -1,9 +1,11 @@
+<div class="loginWrap">
+  <ul>
+    <% if(locals.isAuthenticated) {%>
+      <li><a href="/logout">Logout</a></li>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
-
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100&family=Roboto:wght@300;400&display=swap" rel="stylesheet">
+    <%} else {%>
+      <li><a href="/register">Register</a></li>
+      <li><a href="/login">Login</a></li>
+    <%}%>
+  </ul>
+</div>

@@ -1,0 +1,46 @@
+.loginFormWrap {
+  width: 100%;
+  min-height: 60vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.loginForm {
+  height: 200px;
+  border-radius: 10px;
+  box-shadow: 3px 4px 5px 1px rgba(0,0,0,0.24);
+  -webkit-box-shadow: 3px 4px 5px 2px rgba(0,0,0,0.24);
+  -moz-box-shadow: 3px 4px 5px 2px rgba(0,0,0,0.24);
+  padding: 30px;
+}
+
+.loginForm form{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+}
+
+.loginForm form div{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 10px;
+
+}
+
+.loginForm form div input{
+  text-align: center;
+  margin: 10px;
+  height: 34px;
+  width: 100%;
+  border-radius: 5px;
+  border: 1px solid transparent;
+  border-top: none;
+  border-bottom: 1px solid #DDD;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,.39), 0 -1px 1px #FFF, 0 1px 0 #FFF;
+  }
+
+}

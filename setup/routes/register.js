@@ -8,7 +8,7 @@ const {User} = require("../models/users");
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('register', { title: 'Express' });
+  res.render('register', { title: 'Register' });
 });
 
 router.post('/', async function (req, res, next) {

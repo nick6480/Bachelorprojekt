@@ -20,6 +20,7 @@ paymentPlan :{
     type : String,
 },
 butlerbird : {
+    url: { type : String, unique : true},
     content : {
       categorys : [{
         category: {
@@ -29,16 +30,18 @@ butlerbird : {
             name : String,
             preview : {
               text : String,
-              img: { data : Buffer, type : String},
-              cta: {
-                text : String,
-                color : String,
-                action : String
-              }
+              img : {
+                data : Buffer,
+                contentType : String
+              },
+              action : String,
             },
-            full: {
+            page: {
               text : String,
-              img: { data : Buffer, type : String}
+              img : {
+                data : Buffer,
+                contentType : String
+              }
             }
           }]
         }

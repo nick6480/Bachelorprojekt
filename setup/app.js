@@ -14,12 +14,12 @@ const session = require('express-session')
 
 
 const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/users');
+const adminRouter = require('./routes/admin');
 const fetchRouter = require('./routes/fetchReq');
 const contentRouter = require('./routes/content');
 const stylingRouter = require('./routes/styling');
 
-const loginRouter = require('./routes/login');
+//const loginRouter = require('./routes/login');
 const registerRouter = require('./routes/register');
 
 
@@ -42,6 +42,8 @@ app.set('views', path.join(__dirname, 'views'));
 
 app.use(expressLayouts);
 app.set('view engine', 'ejs');
+
+
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -110,15 +112,22 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, function (email, pass
   })
 }));
 
+/*
+app.use(function(req, res, next) {
+
+  res.locals.login = req.isAuthenticated();
+  next();
+});
+*/
 
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/admin', adminRouter);
 app.use('/fetchReq', fetchRouter);
 app.use('/content', contentRouter);
 app.use('/styling', stylingRouter);
 
-app.use('/login', loginRouter);
+app.use('/login', indexRouter);
 app.use('/register', registerRouter);
 
 

@@ -1,16 +1,25 @@
 var express = require('express');
 const mongoose = require('mongoose');
 var router = express.Router();
+
+const multer = require('multer');
+const path = require('path');
+
+const fs = require('fs');
+const formidable = require('formidable');
+
+
 const {Hotel} = require("../models/hotels");
 
+const {authUser, authUserBool} = require("../private/auth");
 
-
-router.get('/', function(req, res, next) {
+router.get('/', authUser, function(req, res, next) {
 
   console.log(req.user);
   Hotel.findOne({_id: req.user.company}, function (err, hotel) {
     if(err) console.log(err);
     if(hotel) {
+      res.locals.isAuthenticated = authUserBool(req, res);
       res.render('content', { title: 'Content',  company : hotel});
     }
   })
@@ -68,25 +77,90 @@ router.post('/createbox', function(req, res, next) {
 
 //Update the category position
 router.post('/updatecatpos', function(req, res, next) {
-  let newArr = [];
+  let catArr = [];
+
+  console.log(req.body.data);
+
 
   Hotel.findOne({ _id:req.user.company}, function(err,hotel) {
     //Finds the matching id and push it to an array
     for (var i = 0; i < req.body.data.length; i++) {
       for (var o = 0; o < hotel.butlerbird.content.categorys.length; o++) {
-        if (req.body.data[i] === hotel.butlerbird.content.categorys[o].category.catid) {
-          console.log('match: ' + req.body.data[i] + " : " + hotel.butlerbird.content.categorys[o].category.catid);
-          newArr.push(hotel.butlerbird.content.categorys[o])
+        if (req.body.data[i].id === hotel.butlerbird.content.categorys[o].category.catid) {
+          console.log('match: ' + req.body.data[i].id + " : " + hotel.butlerbird.content.categorys[o].category.catid);
+          catArr.push(hotel.butlerbird.content.categorys[o])
         }
+
+      /*  for (var a = 0; a < req.body.data[i].boxes.length; a++) {
+          for (var u = 0; u < hotel.butlerbird.content.categorys[o].category.content.length; u++) {
+            if (req.body.data[i].data[a] === hotel.butlerbird.content.categorys[o].category.content[u]) {
+              //boxArr.push(hotel.butlerbird.content.categorys[o].content[u])
+              catArr[o].category.content.push(hotel.butlerbird.content.categorys[o].content[u])
+
+            }
+          //let q = `butlerbird.content.categorys${[o]}.category.content`
+          //Hotel.findOneAndUpdate({ _id:req.user.company}, {`butlerbird.content.categorys${[o]}.category.content`: boxArr},{new: true, upsert: true }).exec();
+          }
+        }*/
       }
     }
 
-    Hotel.findOneAndUpdate({ _id:req.user.company}, {"butlerbird.content.categorys": newArr},{new: true, upsert: true }).exec();
-    console.log(newArr);
+    Hotel.findOneAndUpdate({ _id:req.user.company}, {"butlerbird.content.categorys": catArr},{new: true, upsert: true }).exec();
+    console.log(catArr);
   });
+
 })
 
 
+// Update Content
+
+
+router.post('/update/content', async function(req, res, next) {
+
+    let form = new formidable.IncomingForm();
+
+
+   form.parse(req, async function(err, fields, files) {
+      if (err) { console.error(err); }
+
+
+     Hotel.findOne({ _id:req.user.company}, async function(err,hotel) {
+
+        for (var i = 0; i < hotel.butlerbird.content.categorys.length; i++) {
+
+
+          if (hotel.butlerbird.content.categorys[i].category.catid == fields.catId) {
+            console.log(hotel.butlerbird.content.categorys[i]);
+            for (var o = 0; o < hotel.butlerbird.content.categorys[i].category.content.length; o++) {
+              console.log(hotel.butlerbird.content.categorys[i].category.catid == fields.catId);
+              if (hotel.butlerbird.content.categorys[i].category.content[o]._id == fields.boxId) {
+
+
+                // Preview
+                hotel.butlerbird.content.categorys[i].category.content[o].preview.text = fields.previewtext
+                hotel.butlerbird.content.categorys[i].category.content[o].preview.action = fields.action
+
+                hotel.butlerbird.content.categorys[i].category.content[o].preview.img.data = await fs.readFileSync(files.previewimg.filepath);
+                hotel.butlerbird.content.categorys[i].category.content[o].preview.img.contentType = files.previewimg.mimetype;
+
+                // Page
+                hotel.butlerbird.content.categorys[i].category.content[o].page.text = fields.pagetext
+
+                hotel.butlerbird.content.categorys[i].category.content[o].page.img.data = await fs.readFileSync(files.previewimg.filepath);
+                hotel.butlerbird.content.categorys[i].category.content[o].page.img.contentType = files.previewimg.mimetype;
+
+
+                await hotel.save();
+              }
+            }
+          }
+        }
+
+      })
+    })
+
+    res.status(200)
+});
 
 
 
@@ -97,5 +171,77 @@ router.post('/', function(req, res, next) {
 
   res.status(200)
 });
+
+
+
+
+
+
+
+
+router.get('/get', function(req, res, next) {
+  console.log(req.hostname);
+
+
+
+  Hotel.findOne({'butlerbird.url' : req.hostname}, function (err, hotel) {
+    if(err) console.log(err);
+    if(hotel) {
+      console.log(hotel);
+
+      res.json(hotel);
+    }
+  })
+
+
+  res.status(200)
+});
+
+
+
+
+
+
+
+
+
+/*
+
+router.get('/find/:hotelId', function(req, res, next) {
+
+  console.log(req.hostname );
+  console.log(req.params.hotelId);
+
+  Hotel.findOne({_id: req.params.hotelId}, function (err, hotel) {
+    if(err) console.log(err);
+    if(hotel) {
+
+      res.json(hotel);
+    }
+  })
+
+
+  res.status(200)
+});
+
+
+
+
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 module.exports = router;
